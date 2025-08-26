@@ -9,12 +9,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
+import { Note } from "@/lib/types"
 
 interface NoteDialogProps {
   isOpen: boolean
   onClose: () => void
-  onSave: (note: { title: string; content: string }) => void
-  initialData?: { title: string; content: string }
+  onSave: (data: { title: string; content: string }) => void
+  initialData?: Note
   mode: "create" | "edit"
 }
 

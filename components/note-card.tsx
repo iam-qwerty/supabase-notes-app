@@ -1,24 +1,21 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { formatDistanceToNow } from "date-fns"
+import { updateNote, deleteNote } from "@/app/actions"
+import { Note } from "@/lib/types"
 
-interface NoteCardProps {
-  id: string
-  title: string
-  content: string
-  createdAt: Date
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
+interface NoteCardProps extends Note {
+  onEdit: () => void
 }
 
-export function NoteCard({ id, title, content, createdAt, onEdit, onDelete }: NoteCardProps) {
+export function NoteCard({ id, title, content, created_at, onEdit }: NoteCardProps) {
   return (
     <Card className="w-full card-hover note-card">
       <CardHeader>
         <CardTitle className="flex items-start justify-between">
           <span className="text-xl font-semibold">{title}</span>
           <span className="text-sm text-muted-foreground">
-            {formatDistanceToNow(createdAt, { addSuffix: true })}
+            {formatDistanceToNow(created_at, { addSuffix: true })}
           </span>
         </CardTitle>
       </CardHeader>
@@ -26,10 +23,14 @@ export function NoteCard({ id, title, content, createdAt, onEdit, onDelete }: No
         <p className="text-gray-600 whitespace-pre-wrap dark:text-gray-300">{content}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline" onClick={() => onEdit(id)} className="button-hover">
+        <Button variant="outline" onClick={onEdit} className="button-hover">
           Edit
         </Button>
-        <Button variant="destructive" onClick={() => onDelete(id)} className="button-hover">
+        <Button 
+          variant="destructive" 
+          onClick={async () => await deleteNote(id)} 
+          className="button-hover"
+        >
           Delete
         </Button>
       </CardFooter>

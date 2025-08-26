@@ -4,49 +4,32 @@ import { Button } from "@/components/ui/button"
 import { NoteCard } from "@/components/note-card"
 import { NoteDialog } from "@/components/note-dialog"
 import { useState } from "react"
+import { Note } from "@/lib/types"
+import { fetchUserNotes, updateNote, deleteNote, createNote } from "@/app/actions"
 
-interface Note {
-  id: string
-  title: string
-  content: string
-  createdAt: Date
+interface NotesInterfaceProps {
+  initialNotes?: Note[]
 }
 
-export function NotesInterface({createNote}: {createNote: (formData: FormData) => Promise<void>}) {
-  const [notes, setNotes] = useState<Note[]>([])
+export function NotesInterface({ initialNotes }: NotesInterfaceProps) {
+  const [notes, setNotes] = useState<Note[]>(initialNotes || [])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
 
-  const handleCreateNote = ({ title, content }: { title: string; content: string }) => {
-    const newNote: Note = {
-      id: Math.random().toString(36).substring(7),
-      title,
-      content,
-      createdAt: new Date(),
-    }
-    setNotes((prev) => [newNote, ...prev])
+  // Add handlers for create and update
+  const handleCreate = async (data: { title: string; content: string }) => {
+    const formData = new FormData()
+    formData.append('title', data.title)
+    formData.append('content', data.content)
+    await createNote(formData)
   }
 
-  const handleEditNote = (noteId: string) => {
-    const note = notes.find((n) => n.id === noteId)
-    if (note) {
-      setEditingNote(note)
-      setIsDialogOpen(true)
-    }
-  }
-
-  const handleUpdateNote = ({ title, content }: { title: string; content: string }) => {
+  const handleUpdate = async (data: { title: string; content: string }) => {
     if (!editingNote) return
-    setNotes((prev) =>
-      prev.map((note) =>
-        note.id === editingNote.id ? { ...note, title, content } : note
-      )
-    )
-    setEditingNote(null)
-  }
-
-  const handleDeleteNote = (noteId: string) => {
-    setNotes((prev) => prev.filter((note) => note.id !== noteId))
+    const formData = new FormData()
+    formData.append('title', data.title)
+    formData.append('content', data.content)
+    await updateNote(editingNote.id, formData)
   }
 
   return (
@@ -61,8 +44,10 @@ export function NotesInterface({createNote}: {createNote: (formData: FormData) =
           <NoteCard
             key={note.id}
             {...note}
-            onEdit={handleEditNote}
-            onDelete={handleDeleteNote}
+            onEdit={() => {
+              setEditingNote(note)
+              setIsDialogOpen(true)
+            }}
           />
         ))}
         {notes.length === 0 && (
@@ -78,7 +63,7 @@ export function NotesInterface({createNote}: {createNote: (formData: FormData) =
           setIsDialogOpen(false)
           setEditingNote(null)
         }}
-        onSave={editingNote ? handleUpdateNote : handleCreateNote}
+        onSave={editingNote ? handleUpdate : handleCreate}
         initialData={editingNote || undefined}
         mode={editingNote ? "edit" : "create"}
       />
