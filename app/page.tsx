@@ -1,5 +1,5 @@
 import { NotesInterface } from "@/components/notes-interface"
-import { fetchUserNotes, updateNote, deleteNote } from "./actions"
+import { fetchUserNotes } from "./actions"
 import { createClient } from "@/utils/supabase/server"
 
 export default async function Home() {

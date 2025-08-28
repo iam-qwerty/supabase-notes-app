@@ -1,6 +1,7 @@
 'use server'
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function createNote(formData: FormData) {
     const title = formData.get("title") as string;
@@ -14,6 +15,7 @@ export async function createNote(formData: FormData) {
     if (!user) {
         redirect('/login');
     }
+
     // create a new note in the database
     const { error } = await supabase.from('notes').insert({
         title,
@@ -24,6 +26,7 @@ export async function createNote(formData: FormData) {
         console.error("Error creating note:", error);
         throw new Error("Failed to create note");
     }
+    revalidatePath('/');
 }
 
 export async function fetchUserNotes(userId: string) {
@@ -69,4 +72,5 @@ export async function deleteNote(id: string) {
         console.error("Error deleting note:", error);
         throw new Error("Failed to delete note");
     }
+    revalidatePath('/');
 }

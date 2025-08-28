@@ -3,24 +3,27 @@
 import { Button } from "@/components/ui/button"
 import { NoteCard } from "@/components/note-card"
 import { NoteDialog } from "@/components/note-dialog"
-import { useState } from "react"
+import { useState, useOptimistic } from "react"
 import { Note } from "@/lib/types"
-import { fetchUserNotes, updateNote, deleteNote, createNote } from "@/app/actions"
+import { updateNote, createNote } from "@/app/actions"
 
 interface NotesInterfaceProps {
   initialNotes?: Note[]
 }
 
 export function NotesInterface({ initialNotes }: NotesInterfaceProps) {
-  const [notes, setNotes] = useState<Note[]>(initialNotes || [])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
+  const [notes, setNotes] = useOptimistic<Note[], Note>(
+    initialNotes ?? [],
+    (state, newNote:Note) => [...state, newNote])
 
   // Add handlers for create and update
   const handleCreate = async (data: { title: string; content: string }) => {
     const formData = new FormData()
     formData.append('title', data.title)
     formData.append('content', data.content)
+    // setNotes(formData)
     await createNote(formData)
   }
 
