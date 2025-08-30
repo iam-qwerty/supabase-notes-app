@@ -1,13 +1,15 @@
 "use client"
-
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
+import type { User } from "@supabase/supabase-js"
 
-export default function Header() {
+
+export default function Header({user}:{user: User | null}) {
   const router = useRouter()
   const supabase = createClient()
+
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -25,13 +27,16 @@ export default function Header() {
 
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center space-x-2">
-            <Button 
+            {
+              user ? <Button 
               variant="ghost" 
               onClick={handleSignOut}
               className="button-hover"
             >
               Sign Out
-            </Button>
+            </Button> :
+            <Link href="/login">Sign in</Link>
+            }
           </nav>
         </div>
       </div>

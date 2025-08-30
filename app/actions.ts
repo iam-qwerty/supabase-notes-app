@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
+// create note
 export async function createNote(formData: FormData) {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
@@ -29,6 +30,7 @@ export async function createNote(formData: FormData) {
     revalidatePath('/');
 }
 
+// fetch notes
 export async function fetchUserNotes(userId: string) {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -44,6 +46,7 @@ export async function fetchUserNotes(userId: string) {
     return data;
 }
 
+// update note
 export async function updateNote(id: string, formData: FormData) {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
@@ -60,8 +63,10 @@ export async function updateNote(id: string, formData: FormData) {
         console.error("Error updating note:", error);
         throw new Error("Failed to update note");
     }
+    revalidatePath('/');
 }
 
+// delete note
 export async function deleteNote(id: string) {
     const supabase = await createClient();
 

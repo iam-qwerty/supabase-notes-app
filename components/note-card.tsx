@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { formatDistanceToNow } from "date-fns"
-import { updateNote, deleteNote } from "@/app/actions"
+import { deleteNote } from "@/app/actions"
 import { Note } from "@/lib/types"
 import { useRouter } from "next/navigation"
 

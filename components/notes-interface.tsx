@@ -14,25 +14,51 @@ interface NotesInterfaceProps {
 export function NotesInterface({ initialNotes }: NotesInterfaceProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
-  const [notes, setNotes] = useOptimistic<Note[], Note>(
+  
+  const [notes, setOptimisticNotes] = useOptimistic<Note[], Note>(
     initialNotes ?? [],
-    (state, newNote:Note) => [...state, newNote])
+    (state, newNote: Note) => [newNote, ...state] // Add to beginning
+  )
 
-  // Add handlers for create and update
-  const handleCreate = async (data: { title: string; content: string }) => {
-    const formData = new FormData()
-    formData.append('title', data.title)
-    formData.append('content', data.content)
-    // setNotes(formData)
-    await createNote(formData)
+  const handleCreate = async (data: Pick<Note, "title" | "content">) => {
+    // Create optimistic note with temporary values
+    const optimisticNote: Note = {
+      user_id: "",
+      id: "",
+      title: data.title ?? "",
+      content: data.content ?? "",
+      created_at: new Date().toISOString()
+    }
+    
+    // Apply optimistic update
+    setOptimisticNotes(optimisticNote)
+    
+    try {
+      const formData = new FormData()
+      formData.append('title', data.title ?? "")
+      formData.append('content', data.content ?? "")
+      
+      await createNote(formData)      
+    } catch (error) {
+      //  useOptimistic will automatically revert on error if server action throws
+      console.error('Failed to create note:', error)
+    }
   }
 
   const handleUpdate = async (data: { title: string; content: string }) => {
     if (!editingNote) return
+    
+    // For updates, you might want to use regular state since
+    // useOptimistic is primarily designed for additions
     const formData = new FormData()
     formData.append('title', data.title)
     formData.append('content', data.content)
-    await updateNote(editingNote.id, formData)
+    
+    try {
+      await updateNote(editingNote.id, formData)
+    } catch (error) {
+      console.error('Failed to update note:', error)
+    }
   }
 
   return (
