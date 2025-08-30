@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { NoteCard } from "@/components/note-card"
 import { NoteDialog } from "@/components/note-dialog"
-import { useState, useOptimistic } from "react"
+import { useState, useOptimistic, startTransition } from "react"
 import { Note } from "@/lib/types"
 import { updateNote, createNote } from "@/app/actions"
 
@@ -31,7 +31,7 @@ export function NotesInterface({ initialNotes }: NotesInterfaceProps) {
     }
     
     // Apply optimistic update
-    setOptimisticNotes(optimisticNote)
+    startTransition(() => {setOptimisticNotes(optimisticNote)})
     
     try {
       const formData = new FormData()
