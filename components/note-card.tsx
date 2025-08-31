@@ -1,22 +1,14 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { formatDistanceToNow } from "date-fns"
-import { deleteNote } from "@/app/actions"
 import { Note } from "@/lib/types"
-import { useRouter } from "next/navigation"
 
 interface NoteCardProps extends Note {
   onEdit: () => void
+  onDelete: () => void
 }
 
-export function NoteCard({ id, title, content, created_at, onEdit }: NoteCardProps) {
-  
-  const router = useRouter()
-
-  const handleDelete = async () => {
-    await deleteNote(id)
-    router.refresh()
-  }
+export function NoteCard({ id, title, content, created_at, onEdit, onDelete }: NoteCardProps) {
   
   return (
     <Card className="w-full card-hover note-card">
@@ -37,8 +29,7 @@ export function NoteCard({ id, title, content, created_at, onEdit }: NoteCardPro
         </Button>
         <Button 
           variant="destructive" 
-          // onClick={async () => await deleteNote(id)} 
-          onClick={handleDelete} 
+          onClick={onDelete}
           className="button-hover"
         >
           Delete

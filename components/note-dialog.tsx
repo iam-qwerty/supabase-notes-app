@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Note } from "@/lib/types"
 
 interface NoteDialogProps {
@@ -20,8 +20,24 @@ interface NoteDialogProps {
 }
 
 export function NoteDialog({ isOpen, onClose, onSave, initialData, mode }: NoteDialogProps) {
-  const [title, setTitle] = useState(initialData?.title || "")
-  const [content, setContent] = useState(initialData?.content || "")
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+
+  // Update state when initialData changes or dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setTitle(initialData?.title || "")
+      setContent(initialData?.content || "")
+    }
+  }, [isOpen, initialData])
+
+  // Reset state when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setTitle("")
+      setContent("")
+    }
+  }, [isOpen])
 
   const handleSave = () => {
     if (!title.trim() || !content.trim()) return
