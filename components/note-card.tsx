@@ -8,7 +8,7 @@ interface NoteCardProps extends Note {
   onDelete: () => void
 }
 
-export function NoteCard({ id, title, content, created_at, onEdit, onDelete }: NoteCardProps) {
+export function NoteCard({ title, content, created_at, onEdit, onDelete }: NoteCardProps) {
   
   return (
     <Card className="w-full card-hover note-card">
