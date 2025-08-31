@@ -75,7 +75,7 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <div className="relative my-6">
+      {/* <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t"></div>
         </div>
@@ -99,7 +99,7 @@ export function LoginForm() {
           </svg>
           GitHub
         </Button>
-      </div>
+      </div> */}
     </>
   )
 }

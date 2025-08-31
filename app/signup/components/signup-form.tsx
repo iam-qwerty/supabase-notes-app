@@ -22,7 +22,7 @@ export function SignUpForm() {
     <>
       <form action={handleSubmit} className="space-y-4">
         <div className="grid gap-4 grid-cols-2">
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="firstName">
               First name
             </label>
@@ -45,7 +45,7 @@ export function SignUpForm() {
               required
               disabled={isLoading}
             />
-          </div>
+          </div> */}
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="email">
@@ -102,7 +102,7 @@ export function SignUpForm() {
         </Link>
       </div>
 
-      <div className="relative my-6">
+      {/* <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t"></div>
         </div>
@@ -126,7 +126,7 @@ export function SignUpForm() {
           </svg>
           GitHub
         </Button>
-      </div>
+      </div> */}
     </>
   )
 }
